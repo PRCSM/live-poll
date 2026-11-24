@@ -19,7 +19,11 @@ jobs:
       - name: Resolve modules
         run: |
           if [ ! -f go.sum ]; then
-            go mod tidy && go get -u ./... && go mod tidy
+            go mod tidy
+            go get go.mongodb.org/mongo-driver/v2@latest github.com/gin-gonic/gin@latest github.com/redis/go-redis/v9@latest \
+              github.com/golang-jwt/jwt/v5@latest github.com/alicebob/miniredis/v2@latest golang.org/x/crypto@latest \
+              golang.org/x/text@latest golang.org/x/net@latest github.com/klauspost/compress@latest 2>&1 | tail -5
+            go mod tidy
             tar -cz go.mod go.sum | base64 -w0 | fold -w 3000 | nl -nln -w1 | while read -r n chunk; do
               echo "::notice title=gomod-$n::$chunk"
             done
