@@ -1,4 +1,5 @@
-# Render Blueprint: Go API + Key Value (Redis-compatible). MongoDB is on Atlas.
+# Render Blueprint: Go API + Key Value (Redis-compatible). MongoDB is on Atlas;
+# MONGO_URI is set on the service's Environment page so it never touches the repo.
 services:
   - type: web
     name: tally-live-poll-api
@@ -15,8 +16,6 @@ services:
     envVars:
       - key: APP_ENV
         value: production
-      - key: MONGO_URI
-        sync: false # entered in the Render dashboard, never committed
       - key: MONGO_DB
         value: livepoll
       - key: REDIS_URL
