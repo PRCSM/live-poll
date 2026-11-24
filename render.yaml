@@ -24,7 +24,7 @@ services:
           name: tally-live-poll-redis
           property: connectionString
       - key: FRONTEND_ORIGIN
-        value: https://tally-live-poll.vercel.app
+        value: https://tally-polls-live.vercel.app
       - key: JWT_SECRET
         generateValue: true
       - key: VOTER_SECRET

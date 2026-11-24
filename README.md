@@ -2,7 +2,7 @@
 
 Create a poll, share the link, and watch votes arrive on every screen as they are cast.
 
-- **Live app:** https://tally-live-poll.vercel.app
+- **Live app:** https://tally-polls-live.vercel.app
 - **API:** https://tally-live-poll-api-jbhg.onrender.com (`/healthz`)
 
 | Layer    | Tech                         | What it does here |
