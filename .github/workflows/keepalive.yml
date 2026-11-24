@@ -11,4 +11,4 @@ jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
-      - run: curl -fsS --max-time 90 https://tally-live-poll-api.onrender.com/healthz
+      - run: curl -fsS --max-time 90 https://tally-live-poll-api-jbhg.onrender.com/healthz
