@@ -32,7 +32,9 @@ function Board({ slug, view }: { slug: string; view: PollView }) {
   const refetch = useCallback(() => qc.invalidateQueries({ queryKey: ['poll', slug] }), [qc, slug])
   const live = useLivePoll(slug, view.streamToken, toLive(view), refetch)
   const { reset } = live
-  useEffect(() => reset(toLive(view)), [view, reset])
+  useEffect(() => {
+    reset(toLive(view))
+  }, [view, reset])
 
   const s = live.state
   if (s.deleted) return <NotFound />

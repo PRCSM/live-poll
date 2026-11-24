@@ -88,7 +88,11 @@ export function Layout() {
   })
   const open = mine.data?.polls.filter((p) => p.status === 'open').length ?? 0
 
-  useEffect(() => window.scrollTo(0, 0), [pathname])
+  // Braces matter: newer browsers return a Promise from scrollTo, and React would
+  // treat any returned value as the effect's cleanup function.
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
 
   const onPoll = pathname.startsWith('/p/')
   const items: NavItem[] = user
