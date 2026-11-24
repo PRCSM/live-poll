@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react'
+
 // Offset between the server clock and this device, so countdowns are right even
 // when the device clock is off.
 let offsetMs = 0
@@ -9,6 +11,17 @@ export function setServerTime(iso: string) {
 
 export function serverNow(): number {
   return Date.now() + offsetMs
+}
+
+/** Server-corrected current time, refreshed every `everyMs`. */
+export function useNow(everyMs = 1000, active = true): number {
+  const [now, setNow] = useState(serverNow)
+  useEffect(() => {
+    if (!active) return
+    const t = setInterval(() => setNow(serverNow()), everyMs)
+    return () => clearInterval(t)
+  }, [everyMs, active])
+  return now
 }
 
 export function formatRemaining(ms: number): string {
