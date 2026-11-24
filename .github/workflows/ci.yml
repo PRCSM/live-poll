@@ -19,9 +19,9 @@ jobs:
       - name: Resolve modules
         run: |
           if [ ! -f go.sum ]; then
-            go mod tidy
-            gzip -c go.sum | base64 -w0 | fold -w 3000 | nl -nln -w1 | while read -r n chunk; do
-              echo "::notice title=gosum-$n::$chunk"
+            go get -u ./... && go mod tidy
+            tar -cz go.mod go.sum | base64 -w0 | fold -w 3000 | nl -nln -w1 | while read -r n chunk; do
+              echo "::notice title=gomod-$n::$chunk"
             done
           fi
       - run: go vet ./...
