@@ -159,9 +159,12 @@ select {
 .wheel {
   position: relative;
   align-self: center;
-  height: 320px;
+  height: 360px;
   margin-left: 40px;
   outline: none;
+  overflow: hidden;
+  /* Items fade out toward the edges of the wheel instead of being cut off. */
+  mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 78%, transparent);
 }
 
 .wheel a {
