@@ -1,0 +1,14 @@
+# Render's free tier sleeps after 15 idle minutes; a cold start would make the
+# first viewer wait ~50s. This keeps the API warm while the app is under review.
+name: keepalive
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - run: curl -fsS --max-time 90 https://tally-live-poll-api.onrender.com/healthz

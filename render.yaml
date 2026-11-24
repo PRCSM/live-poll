@@ -1,0 +1,43 @@
+# Render Blueprint: Go API + Key Value (Redis-compatible). MongoDB is on Atlas.
+services:
+  - type: web
+    name: tally-live-poll-api
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    healthCheckPath: /healthz
+    autoDeploy: true
+    buildFilter:
+      paths:
+        - backend/**
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: MONGO_URI
+        sync: false # entered in the Render dashboard, never committed
+      - key: MONGO_DB
+        value: livepoll
+      - key: REDIS_URL
+        fromService:
+          type: keyvalue
+          name: tally-live-poll-redis
+          property: connectionString
+      - key: FRONTEND_ORIGIN
+        value: https://tally-live-poll.vercel.app
+      - key: JWT_SECRET
+        generateValue: true
+      - key: VOTER_SECRET
+        generateValue: true
+      # Render sits behind Cloudflare, which overwrites this header with the real
+      # client address. X-Forwarded-For is appended to, so clients could spoof it.
+      - key: CLIENT_IP_HEADER
+        value: True-Client-IP
+
+  - type: keyvalue
+    name: tally-live-poll-redis
+    plan: free
+    region: singapore
+    maxmemoryPolicy: noeviction
+    ipAllowList: [] # private network only
