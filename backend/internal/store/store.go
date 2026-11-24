@@ -30,18 +30,20 @@ func OpenMongo(ctx context.Context, uri, dbName string) (*mongo.Client, *mongo.D
 }
 
 func EnsureIndexes(ctx context.Context, db *mongo.Database) error {
-	unique := options.Index().SetUnique(true)
+	// A fresh options builder per index: the driver records the generated index name
+	// on the builder, so sharing one would give every index the same name.
+	unique := func() *options.IndexOptionsBuilder { return options.Index().SetUnique(true) }
 	specs := map[string][]mongo.IndexModel{
 		"users": {
-			{Keys: bson.D{{Key: "email", Value: 1}}, Options: unique},
+			{Keys: bson.D{{Key: "email", Value: 1}}, Options: unique()},
 		},
 		"polls": {
-			{Keys: bson.D{{Key: "slug", Value: 1}}, Options: unique},
+			{Keys: bson.D{{Key: "slug", Value: 1}}, Options: unique()},
 			{Keys: bson.D{{Key: "ownerId", Value: 1}, {Key: "_id", Value: -1}}},
 		},
 		"votes": {
 			// The vote dedupe guarantee in Mongo: replays from the Redis stream are no-ops.
-			{Keys: bson.D{{Key: "pollId", Value: 1}, {Key: "voterKey", Value: 1}}, Options: unique},
+			{Keys: bson.D{{Key: "pollId", Value: 1}, {Key: "voterKey", Value: 1}}, Options: unique()},
 		},
 	}
 	for coll, models := range specs {
