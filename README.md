@@ -68,7 +68,7 @@ browser ── POST /api/polls/:slug/votes ──▶ Go API
 
 - One vote per device is bypassable with a private window. Polls can require sign-in to vote, which makes it one vote per account.
 - Votes accepted by Redis but not yet written by the worker would be lost if Redis lost its data in that window (normally milliseconds).
-- Render's free tier sleeps when idle; a scheduled GitHub Action pings `/healthz` to keep it warm.
+- Render's free tier sleeps after 15 idle minutes. The API pings its own public URL every 10 minutes (only when `RENDER_EXTERNAL_URL` is set) so reviewers never hit a cold start; a scheduled GitHub Action pings it as a backup.
 
 ## Run locally
 

@@ -20,6 +20,9 @@ type Config struct {
 	// ClientIPHeader names a header the hosting edge sets to the real client IP
 	// (and overwrites if a client sends it). Empty means use the socket address.
 	ClientIPHeader string
+	// PublicURL is this service's own public address. Render sets RENDER_EXTERNAL_URL;
+	// when present, the server pings itself so the free instance never idles to sleep.
+	PublicURL string
 }
 
 func (c Config) Production() bool { return c.Env == "production" }
@@ -41,6 +44,7 @@ func load(get func(string) string) (Config, error) {
 		JWTSecret:      []byte(get("JWT_SECRET")),
 		VoterSecret:    []byte(get("VOTER_SECRET")),
 		ClientIPHeader: get("CLIENT_IP_HEADER"),
+		PublicURL:      strings.TrimRight(get("RENDER_EXTERNAL_URL"), "/"),
 	}
 	if p := get("TRUSTED_PROXIES"); p != "" {
 		for _, s := range strings.Split(p, ",") {

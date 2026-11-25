@@ -92,6 +92,9 @@ func run() error {
 	go hub.Run(ctx)
 	go vote.NewWorker(rdb, votes).Run(ctx)
 	go pollH.RunAutoClose(ctx)
+	if cfg.PublicURL != "" {
+		go keepAwake(ctx, cfg.PublicURL+"/healthz")
+	}
 
 	srv := &http.Server{
 		Addr:              ":" + cfg.Port,
@@ -138,6 +141,34 @@ func health(mc *mongo.Client, rdb *redis.Client) gin.HandlerFunc {
 			res["redis"], res["status"], code = "down", "degraded", http.StatusServiceUnavailable
 		}
 		c.JSON(code, res)
+	}
+}
+
+// keepAwake requests the service's own public URL every 10 minutes. Render's free
+// tier sleeps after 15 minutes without inbound traffic, and this request goes out
+// through Render's edge, so it counts as traffic and the first visitor never waits
+// for a cold start.
+func keepAwake(ctx context.Context, url string) {
+	client := &http.Client{Timeout: 30 * time.Second}
+	t := time.NewTicker(10 * time.Minute)
+	defer t.Stop()
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		case <-t.C:
+			req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+			if err != nil {
+				slog.Error("keep-awake request", "err", err)
+				return
+			}
+			res, err := client.Do(req)
+			if err != nil {
+				slog.Warn("keep-awake ping failed", "err", err)
+				continue
+			}
+			_ = res.Body.Close()
+		}
 	}
 }
 
