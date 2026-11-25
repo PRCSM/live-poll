@@ -38,7 +38,7 @@ export function Home() {
 
   return (
     <div className="bento">
-      <Card i={0} className="span-2 light" style={{ display: 'grid', alignContent: 'space-between', minHeight: 340 }}>
+      <Card i={0} className="span-2 light" style={{ justifyContent: 'space-between' }}>
         <div className="spread">
           <span className="label-mono">Tally · live polls</span>
           <Pill tone="green" live>
@@ -70,7 +70,7 @@ export function Home() {
         </div>
       </Card>
 
-      <Card i={1} className="sunrise" style={{ minHeight: 340, display: 'grid', alignContent: 'space-between' }}>
+      <Card i={1} className="sunrise" style={{ justifyContent: 'space-between' }}>
         <div className="card-head">
           <h2 className="card-title">Refreshes needed</h2>
         </div>
@@ -108,7 +108,7 @@ export function Home() {
           <dt>04</dt>
           <dd>Results move live</dd>
         </dl>
-        <div style={{ marginTop: 26 }}>
+        <div style={{ marginTop: 'auto' }}>
           <Ruler fraction={0.62} ticks={30} tag="closes on time" />
         </div>
       </Card>

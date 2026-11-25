@@ -86,7 +86,7 @@ export function AuthPage({ mode }: { mode: 'login' | 'signup' }) {
           </div>
         </form>
       </Card>
-      <Card i={1} className="sunrise" style={{ minHeight: 420, display: 'grid', alignContent: 'space-between' }}>
+      <Card i={1} className="sunrise" style={{ justifyContent: 'space-between' }}>
         <span className="label-mono">Why sign in</span>
         <div className="stack" style={{ gap: 6 }}>
           <span className="small ink-2">Polls you create stay private to manage: close, reopen, export or delete them any time.</span>
