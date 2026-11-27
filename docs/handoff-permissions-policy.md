@@ -34,3 +34,14 @@ document.featurePolicy.allowsFeature('camera')      // true
 document.featurePolicy.allowsFeature('geolocation') // false
 ```
 Then start a Loom recording with camera on to confirm.
+
+## Follow-up: camera and mic no longer restricted
+Allowing only `self` and the Loom extension ID still did not let Loom record. The app does not
+use the camera or microphone itself, so the header now restricts geolocation only and leaves camera
+and mic at the browser default. Any recording extension works.
+
+New value:
+```
+geolocation=()
+```
+Verify: `document.featurePolicy.allowsFeature('camera')` is `true` after a hard refresh (Ctrl+Shift+R).
